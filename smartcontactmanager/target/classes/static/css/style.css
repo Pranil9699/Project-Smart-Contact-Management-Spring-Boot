@@ -1,0 +1,243 @@
+@charset "ISO-8859-1";
+
+body {
+	background: #e2e2e2 !important;
+}
+
+.bg-primary {
+	background: #009688 !important;
+}
+
+.banner {
+	width: 100%;
+	height: 93vh;
+	background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+		url(../img/banner.jpg);
+	background-size: cover;
+	color: white;
+}
+
+.my-card {
+	padding: 20px;
+	background: #ffffff;
+}
+
+/* login form css */
+#login .container #login-row #login-column #login-box {
+	margin-top: 120px;
+	max-width: 600px;
+	height: 420px;
+	border: 1px solid black;
+	/*border-radius:5px;
+  margin-top:200px;*/
+	background-color: white;
+}
+
+#login .container #login-row #login-column #login-box #login-form {
+	padding: 20px;
+}
+
+#login .container #login-row #login-column #login-box #login-form #register-link
+	{
+	margin-top: -85px;
+}
+
+/*login error page css */
+.page-wrap {
+	min-height: 100vh;
+}
+
+/* sideBar style  */
+@media only screen and (max-width : 600px) {
+	.sidebar {
+		display: none;
+		width: 70% !important;
+		background: white;
+		height: 100vh;
+		position: fixed;
+		padding-top: 60px;
+		opacity: .5px;
+		text-transform: uppercase;
+	}
+	.content {
+		margin-left: 0% !important;
+	}
+	.a-img {
+		width: 10%;
+		height: 10%;
+		float: none;
+		margin: auto;
+		margin-left: 0px;
+	}
+	.sidebar a {
+		display: block;
+		width: 100%;
+		padding: 4px 15px;
+		text-decoration: none;
+		color: gray;
+		margin: 3px 0px;
+		text-transform: inherit;
+	}
+	.sidebar a:hover {
+		background: #e2e2e2;
+		color: black;
+		text-shadow: 1px 0px blue;
+	}
+}
+
+.content .crossBTN {
+	position: relative;
+	/* top:30px;
+	left:30px;
+	float :left ;*/
+	cursor: pointer;
+}
+
+.sidebar {
+	width: 18%;
+	background: white;
+	height: 100%;
+	position: fixed;
+	padding-top: 45px;
+	z-index: 99999999999999999;
+}
+
+.a-img {
+	width: 20%;
+	height: 20%;
+	float: none;
+	margin: auto;
+	margin-left: 0px;
+}
+
+.sidebar a {
+	display: block;
+	width: 100%;
+	padding: 10px 25px;
+	text-decoration: none;
+	color: gray;
+	margin: 5px 0px;
+	text-transform: inherit;
+}
+
+.sidebar .crossBTN {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	font-size: 36px;
+	cursor: pointer;
+}
+
+.sidebar a:hover {
+	background: #e2e2e2;
+	color: black;
+	text-shadow: 1px 0px blue;
+}
+
+.sidebar .divider {
+	height: .5px;
+}
+
+.content {
+	margin-left: 20%;
+}
+
+/* add the contact css */
+.form-container {
+	max-width: 500px;
+	margin: 0 auto;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+	color: #333;
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+.form-container label {
+	font-weight: bold;
+	color: #333;
+}
+
+.form-container .form-control {
+	border-color: #ccc;
+}
+
+.form-container .form-control:focus {
+	border-color: #80bdff;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-container textarea.form-control {
+	resize: vertical;
+}
+
+.form-container button[type="submit"] {
+	background-color: #007bff;
+	border-color: #007bff;
+}
+
+.form-container button[type="submit"]:hover {
+	background-color: #0069d9;
+	border-color: #0062cc;
+}
+
+/* for show contact table style */
+.custom-table {
+	border:1px solid black;
+	border-collapse: collapse;
+	width: 100%;
+	font-size: 15px;
+}
+
+.custom-table th, .custom-table td {
+	padding: 8px;
+	text-align: center;
+}
+
+.custom-table thead th {
+	background-color: #f8f9fa;
+	color: #333;
+	font-weight: bold;
+	border-bottom: 2px solid #ccc;
+}
+
+.custom-table tbody td {
+	border-bottom: 1px solid #ccc;
+}
+.custom-table tbody tr:hover {
+	background:#ffff80;
+	color:black;	
+}
+
+
+/* profile pic style */
+.contact_profile_pic{
+	width:30px;
+	height:30px;
+	object-fit:cover;
+	margin-left: 0px;
+	border-radius: 50%;
+}
+
+
+ /*   search bar style */
+ 
+ .search-container{
+ position: relative;
+ }
+ .search-result{
+ position:absolute;
+ background: white;
+ width: 100%;
+ padding: 10px;
+ border:1px solid gray;
+ display: none;
+ 
+ 
+ }
+ 

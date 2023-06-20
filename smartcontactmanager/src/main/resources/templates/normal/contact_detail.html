@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{normal/base::Layout(~{::section})}">
+<head>
+<meta charset="utf-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+
+	<section>
+
+
+		<div class="card mr-3 ml-3" th:if="${Scontact}">
+
+			<div class="card-body">
+				<div class="container text-center">
+					<img alt="Profile Photo" style="width: 200px; height: 200px;"
+						class="contact_profile_pic"
+						th:src="@{'/img/'+${Scontact.imageURL}}">
+
+					<h3 class="mt-3">
+						<span th:text="${Scontact.name+' '+Scontact.secondName }"></span>
+					</h3>
+
+
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">#ContactId</th>
+								<th scope="col"><span th:text="${Scontact.cid}"></span></th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">Email</th>
+								<td><span th:text="${Scontact.email}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">Phone</th>
+								<td><span th:text="${Scontact.phone}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">Work</th>
+								<td><span th:text="${Scontact.work}"></span></td>
+							</tr>
+
+						</tbody>
+					</table>
+
+					<div class="description">
+
+						<th:block th:utext="${Scontact.description}"></th:block>
+
+					</div>
+
+					<div class="container mt-3">
+
+						<form method="POST" th:action="@{'/user/update-contact/'+${Scontact.cid}}" class="mt-2">
+						<button type="submit"
+						class="btn btn-primary btn-sm btn-block ">Update</button>
+						</form>
+						<a th:href="@{'/user/delete/'+${Scontact.cid}}" class="btn btn-danger btn-sm mt-3 btn-block">Delete</a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+  <div class="card-body text-center" th:unless="${Scontact}">
+  
+  <h1 class="bg-danger text-white p-3">
+  You'r are not Valid User to See This Contact!
+  </h1>
+  
+  </div>
+  
+	</section>
+
+
+</body>
+</html>

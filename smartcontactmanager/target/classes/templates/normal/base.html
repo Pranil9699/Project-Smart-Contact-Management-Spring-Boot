@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:fragment="Layout(content)">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+	crossorigin="anonymous">
+
+
+<link
+	href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+	rel="stylesheet" id="bootstrap-css">
+<script
+	src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script
+	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+<title th:text="${title}">Hello, world!</title>
+</head>
+<body>
+	<!-- Navbar START-->
+	<nav class="fixed-top navbar navbar-expand-lg navbar-dark bg-primary">
+		<div class="container-fluid">
+
+			<a class="navbar-brand" href="#">Smart Contact Manager</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-uppercase">
+					<li class="nav-item"><a class="nav-link active"
+						aria-current="page" th:href="@{/}">Home</a></li>
+
+
+					<li class="nav-item"><a class="nav-link " href="#"
+						tabindex="-1" aria-disabled="true"><span
+							th:text="${user.name}"></span></a></li>
+
+					<li class="nav-item"><a class="nav-link " th:href="@{/logout}"
+						tabindex="-1" aria-disabled="true">Logout</a></li>
+				</ul>
+
+			</div>
+		</div>
+	</nav>
+	<!-- Navbar END-->
+
+
+	<!-- sidebar starting -->
+	<div class="sidebar mt-2 border border-black">
+		<span class="crossBTN"><img onclick="toggleSidebar()"
+			width="35" height="35" src="https://img.icons8.com/ios/50/cancel.png"
+			alt="cancel" /></span> <a th:href="@{/user/index}"
+			class="item  align-items-center"><img class="a-img" width="28"
+			height="28" src="https://img.icons8.com/fluency/48/home.png"
+			alt="home" /> Home</a> <a th:href="@{/user/show-contact/0}"
+			class="item  align-items-center"><img class="a-img" width="28"
+			height="28" src="https://img.icons8.com/3d-fluency/94/contacts.png"
+			alt="contacts" /> View Contacts</a> <a th:href="@{/user/add-contact}"
+			class="item  align-items-center"><img class="a-img" width="28"
+			height="28" src="https://img.icons8.com/color/48/new-contact.png"
+			alt="new-contact" /> New Contact</a> <a th:href="@{/user/profile}"
+			class="item  align-items-center">
+			<img class="a-img" width="28"
+			height="28"
+			src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
+			alt="user-male-circle" th:href="@{/user/profile}" /> Your Profile</a> <a href="#"
+			class="item  align-items-center"><img class="a-img" width="28"
+			height="28" src="https://img.icons8.com/3d-fluency/94/gear--v2.png"
+			alt="gear--v2" /> Setting</a> <a th:href="@{/logout}"
+			class="item  align-items-center"><img class="a-img" width="28"
+			height="28"
+			src="https://img.icons8.com/stickers/100/logout-rounded.png"
+			alt="logout-rounded" /> Logout</a>
+		<div class="divider"></div>
+	</div>
+	<!-- End of Sidebar  -->
+	<!-- Starting Content -->
+	<div class="content mt-5">
+		<img class="crossBTN" id="crossBTNMenu" onclick="toggleSidebar()"
+			width="30" height="30" style="margin-top: 30px;"
+			src="https://img.icons8.com/ios-glyphs/30/menu--v1.png"
+			alt="menu--v1" />
+		<div class="container m-auto text-center">
+			<div class="alert" style="width: 80%;" th:if="${session.message}"
+				th:classappend="${session.message.type}">
+				<p th:text="${session.message.content}" class="text-center"></p>
+				<th:block
+					th:text="${@sessionHelper.removeSessionAttribute('message')}"></th:block>
+			</div>
+		</div>
+		<div th:replace="${content}"></div>
+	</div>
+	<!-- Ending Content -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+
+
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+	<script type="text/javascript">
+function deleteContact(cid){
+	console.log("done")
+	console.log(cid)
+	swal({
+		  title: "Are you sure?",
+		  text: "Your Want to Delete This contact!",
+		  icon: "warning",
+		  buttons: true,
+		  dangerMode: true,
+		})
+		.then((willDelete) => {
+		  if (willDelete) {
+		    window.location="/user/delete/"+cid;
+		  } else {
+		    swal("Contact is Safed !");
+		  }
+		});
+}
+//console.log(deleteContact(13))
+</script>
+
+	<script type="text/javascript" th:src="@{/js/script.js}"></script>
+</body>
+</html>
