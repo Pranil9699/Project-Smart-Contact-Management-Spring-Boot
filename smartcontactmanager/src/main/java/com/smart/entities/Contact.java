@@ -26,7 +26,7 @@ public class Contact {
 
 	private String phone;
 	private String imageURL;
-	@Column()
+	@Column(length = 5000)
 	private String description;
 	@ManyToOne
 	@JsonIgnore

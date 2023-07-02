@@ -1,43 +1,54 @@
 package com.smart.controller;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.io.*;
+import java.nio.file.*;
+//import java.nio.file.Path;
+//import java.nio.file.Paths;
+//import java.nio.file.StandardCopyOption;
 import java.security.Principal;
-import java.util.Optional;
+import java.util.*;
+//import java.util.Optional;
 
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
+//import org.springframework.data.domain.PageRequest;
+//import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+//import org.springframework.web.bind.annotation.ModelAttribute;
+//import org.springframework.web.bind.annotation.PathVariable;
+//import org.springframework.web.bind.annotation.PostMapping;
+//import org.springframework.web.bind.annotation.RequestBody;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.smart.dao.ContactRepository;
-import com.smart.dao.UserRepository;
-import com.smart.entities.Contact;
-import com.smart.entities.User;
+import com.razorpay.*;
+//import com.razorpay.RazorpayException;
+//import com.smart.dao.ContactRepository;
+import com.smart.dao.*;
+import com.smart.entities.*;
 import com.smart.helper.Message;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	@Autowired
 	private UserRepository repository;
 	@Autowired
 	private ContactRepository contactrepository;
+	@Autowired
+	private MyOrderRepository myOrderRepository;
 
 	@ModelAttribute
 	public void addCommonAttribute(Model model, Principal principal) {
@@ -71,7 +82,7 @@ public class UserController {
 
 			if (file.isEmpty()) {
 				System.out.println("We haven't chosen any file");
-				contact.setImageURL("icons8-no-camera.gif");
+				contact.setImageURL("default.png");
 			} else {
 				contact.setImageURL(file.getOriginalFilename());
 				System.out.println("Image received");
@@ -262,4 +273,86 @@ public class UserController {
 		model.addAttribute("title","User Profile Page");
 		return "normal/profile";
 	}
+	
+	
+	// Setting Handler 
+	@GetMapping("/setting")
+	public String opensetting(Model model) {
+		model.addAttribute("title", "User Settings");
+		return "normal/setting";
+	}
+	
+	//change password handler
+	@PostMapping("/change-password")
+	public String changePassword(@RequestParam("opassword") String opassword,@RequestParam("npassword") String npassword,Principal principal,HttpSession session) {
+		System.out.println(opassword+" "+npassword);
+		String name = principal.getName();
+		User user = this.repository.getUserByUsername(name);
+//		System.out.println(user.getPassword());
+//		opassword= passwordEncoder.encode(opassword);
+//		
+//		System.out.println(opassword);
+		if(passwordEncoder.matches(opassword, user.getPassword())) {
+			user.setPassword(passwordEncoder.encode(npassword));
+			repository.save(user);
+			session.setAttribute("message", new Message("SuccessFully Password Changed !!", "alert-success"));
+		}else {
+			session.setAttribute("message", new Message("Old Password is Wrong !!", "alert-danger"));
+			return "redirect:/user/setting";
+		}
+		
+		return "redirect:/user/index";
+	}
+
+
+// create order for payment
+	
+	@PostMapping("/create_order")
+	@ResponseBody
+	public String create_order(@RequestBody Map<String,Object> data
+			,Principal principal) throws RazorpayException {
+	System.out.println("here coming");
+	int amt=Integer.parseInt(data.get("amount").toString());
+	System.out.println(amt);
+	var client = new RazorpayClient("rzp_test_QFvMW8KhGXxtl9", "A8WZvxnp2EMf2vuJFBj1UnbU");
+	
+	JSONObject object = new JSONObject();
+	object.put("amount", amt*100);
+	object.put("currency","INR");
+	object.put("receipt","txn_235425");
+
+	//creating new order
+	Order order = client.orders.create(object);
+	System.out.println("order:"+order);
+	
+	
+	
+	//save the order in database
+	MyOrder myOrder= new MyOrder();
+	myOrder.setAmount(order.get("amount").toString());
+	myOrder.setOrderId(order.get("id"));
+	myOrder.setPaymentId(null);
+	myOrder.setStatus("created");
+	myOrder.setUser(repository.getUserByUsername(principal.getName()) );
+	myOrder.setReceipt(order.get("receipt"));
+	
+	myOrderRepository.save(myOrder);
+	
+		return order.toString();
+	}
+	
+	@PostMapping("/update_order")
+	public ResponseEntity<?> update_order(@RequestBody Map<String,Object> data
+			,Principal principal){
+		System.out.println("ok done"); 
+		System.out.println(data); 
+		
+		MyOrder myOrder = myOrderRepository.findByOrderId(data.get("orderid").toString());
+		myOrder.setPaymentId(data.get("paymentid").toString());
+		myOrder.setStatus(data.get("status").toString());
+		myOrderRepository.save(myOrder);
+		return ResponseEntity.ok(Map.of("message","Payment Successfully Done And Updated"));
+	}
+
+
 }

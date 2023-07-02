@@ -59,7 +59,17 @@
     <groupId>org.hibernate.validator</groupId>
     <artifactId>hibernate-validator</artifactId>
     </dependency>
-
+<dependency>
+  <groupId>com.sun.mail</groupId>
+  <artifactId>jakarta.mail</artifactId>
+  
+</dependency>
+<dependency>
+  <groupId>com.razorpay</groupId>
+  <artifactId>razorpay-java</artifactId>
+  <version>1.4.4</version>
+  
+</dependency>
 	</dependencies>
 
 	<build>

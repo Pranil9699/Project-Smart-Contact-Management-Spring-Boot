@@ -27,9 +27,30 @@
 				
 				<a th:href="@{/user/add-contact}"  class="btn btn-primary mt-4 btn-block text-uppercase">Add New Contact</a>
 				
+				
+				<hr>
+				
+				<h3 class="my-3">Donate Us</h3>
+				<input id="payment_field" type="text" class="form-control my-2" placeholder="Enter Amount Here..." />
+				
+				<div class="container text-center mt-4">
+				
+				<button type="button" id="rzp-button1" onclick="paymentStart()" class="btn btn-success btn-block">CheckOut</button>
+				
+				</div>
+				
 				</div>
 			</div>
 		</div>
+		<script type="text/javascript">
+	
+	$(document).ready(()=>{
+		
+		/* $(".item").removeClass("") */
+		$("#home-link").addClass("active");
+	});
+	
+	</script>
 	</section>
 
 

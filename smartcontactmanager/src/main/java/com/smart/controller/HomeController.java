@@ -9,16 +9,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.smart.dao.ForgotPasswordRepository;
 import com.smart.dao.UserRepository;
+import com.smart.entities.ForgotPassword;
 import com.smart.entities.User;
 import com.smart.helper.Message;
+import com.smart.services.EmailService;
 
 import javax.servlet.http.HttpSession;
+import java.util.*;
 
 @Controller
 public class HomeController {
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
+	@Autowired
+	private ForgotPasswordRepository forgotPasswordRepository;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -79,7 +86,7 @@ public class HomeController {
 			user.setRole("ROLE_USER");
 			user.setEnabled(true);
 			user.setImageURL("default.png");
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 			System.out.println(agreement + " : " + user);
 
 			User result = userRepository.save(user);
@@ -89,7 +96,6 @@ public class HomeController {
 			m.addAttribute("user", new User());
 			return "signup";
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 			m.addAttribute("user", user);
 			session.setAttribute("message", new Message("Something Went Wrong !!" + e.getMessage(), "alert-danger"));
@@ -97,19 +103,103 @@ public class HomeController {
 		}
 
 	}
-   
+
 	@GetMapping("/signin")
-    public String loginform(Model model) {
-        model.addAttribute("title", "Login Form");
+	public String loginform(Model model) {
+		model.addAttribute("title", "Login Form");
 		return "login";
-    }
+	}
+
 	@GetMapping("/login-error")
 	public String loginerror(Model model) {
 		model.addAttribute("title", "Login error Page ");
 		return "login-error";
 	}
-	
-	
 
+	// forgot password req.
+	@GetMapping("/forgot-password")
+	public String forgot_password(Model model) {
+		model.addAttribute("title", "Forgot Password(Email)");
+		return "forgotpassword";
+	}
+
+	@PostMapping("/do_checkemail")
+	public String do_checkemail(@RequestParam("email") String email, Model model, HttpSession session) {
+
+		User user = userRepository.getUserByUsername(email);
+		if (user != null) {
+
+			// create the OTP
+			Random random = new Random();
+			StringBuilder otp = new StringBuilder(6);
+			for (int i = 0; i < 6; i++) {
+				otp.append(random.nextInt(10));
+			}
+			int OTP = Integer.parseInt(otp.toString());
+			System.out.println("OTP :" + OTP);
+
+//	        /sending Email OTP to user email
+			boolean check = EmailService.sendEmail(email, OTP);
+
+			if (check == true) {
+
+				ForgotPassword save = forgotPasswordRepository.save(new ForgotPassword(email, OTP));
+				System.out.println(save + "From DB");
+				session.setAttribute("message", new Message("Email Is Sended to " + email, "alert-success"));
+
+			} else {
+				session.setAttribute("message",
+						new Message("Pleased Try Again, Email is Not Sended!!", "alert-danger"));
+				return "redirect:/forgot-password";
+
+			}
+
+		} else {
+			System.out.println("Apsend");
+			session.setAttribute("message", new Message("Email-Id is Wrong !!", "alert-danger"));
+			return "redirect:/forgot-password";
+		}
+		model.addAttribute("title", "Forgot Password(Email) OTP page");
+		model.addAttribute("user", user);
+		return "userOTP";
+	}
+
+	@PostMapping("/do_checkemailAndotp")
+	public String do_checkemailAndotp(@RequestParam("email") String email, @RequestParam("otp") String Sotp,
+			Model model, HttpSession session) {
+
+		System.out.println(email + " : " + Sotp);
+		Integer otp = Integer.parseInt(Sotp);
+		ForgotPassword first = new ForgotPassword(email, otp);
+		ForgotPassword byId = forgotPasswordRepository.getByEmailAndOtp(email,otp);
+		System.out.println(byId+" : "+first);
+		if (first.getEmail().toLowerCase().equals(byId.getEmail())||first.getOtp()==byId.getOtp()) {
+			System.out.println("Matched");
+			model.addAttribute("user", userRepository.getUserByUsername(email));
+		} else {
+			session.setAttribute("message", new Message("OTP is Not Matched", "alert-danger"));
+			return "redirect:/forgot-password";
+		}
+
+		return "resetpassword";
+	}
+
+	@PostMapping("/do_resetpassword")
+	public String do_resetpassword(@RequestParam("email") String email, @RequestParam("newpassword") String newPassword,
+			Model model, HttpSession session) {
+
+		if (newPassword.length() >= 6) {
+			User user = userRepository.getUserByUsername(email);
+			user.setPassword(passwordEncoder.encode(newPassword));
+			userRepository.save(user);
+			session.setAttribute("message", new Message("Password is Updated", "alert-success"));
+			forgotPasswordRepository.deleteById(email);
+			return "redirect:/signin";
+		} else {
+			session.setAttribute("message", new Message("Password Must upTo 6 Characters", "alert-danger"));
+			return "resetpassword";
+		}
+
+	}
 
 }

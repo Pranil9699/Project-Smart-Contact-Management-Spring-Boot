@@ -21,7 +21,8 @@
 	src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script
 	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+	
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
 <title th:text="${title}">Hello, world!</title>
 </head>
@@ -39,7 +40,7 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-uppercase">
-					<li class="nav-item"><a class="nav-link active"
+					<li class="nav-item"><a class="nav-link "
 						aria-current="page" th:href="@{/}">Home</a></li>
 
 
@@ -61,13 +62,13 @@
 	<div class="sidebar mt-2 border border-black">
 		<span class="crossBTN"><img onclick="toggleSidebar()"
 			width="35" height="35" src="https://img.icons8.com/ios/50/cancel.png"
-			alt="cancel" /></span> <a th:href="@{/user/index}"
+			alt="cancel" /></span> <a id="home-link" th:href="@{/user/index}"
 			class="item  align-items-center"><img class="a-img" width="28"
 			height="28" src="https://img.icons8.com/fluency/48/home.png"
-			alt="home" /> Home</a> <a th:href="@{/user/show-contact/0}"
+			alt="home" /> Home</a> <a id="contacts-link" th:href="@{/user/show-contact/0}"
 			class="item  align-items-center"><img class="a-img" width="28"
 			height="28" src="https://img.icons8.com/3d-fluency/94/contacts.png"
-			alt="contacts" /> View Contacts</a> <a th:href="@{/user/add-contact}"
+			alt="contacts" /> View Contacts</a> <a id="add-link" th:href="@{/user/add-contact}"
 			class="item  align-items-center"><img class="a-img" width="28"
 			height="28" src="https://img.icons8.com/color/48/new-contact.png"
 			alt="new-contact" /> New Contact</a> <a th:href="@{/user/profile}"
@@ -75,16 +76,17 @@
 			<img class="a-img" width="28"
 			height="28"
 			src="https://img.icons8.com/3d-fluency/94/user-male-circle.png"
-			alt="user-male-circle" th:href="@{/user/profile}" /> Your Profile</a> <a href="#"
-			class="item  align-items-center"><img class="a-img" width="28"
+			alt="user-male-circle" id="profile-link" th:href="@{/user/profile}" /> Your Profile</a> <a href="#"
+			class="item  align-items-center" th:href="@{/user/setting}" id="setting-link"><img class="a-img" width="28"
 			height="28" src="https://img.icons8.com/3d-fluency/94/gear--v2.png"
-			alt="gear--v2" /> Setting</a> <a th:href="@{/logout}"
+			alt="gear--v2"  /> Setting</a> <a th:href="@{/logout}"
 			class="item  align-items-center"><img class="a-img" width="28"
 			height="28"
 			src="https://img.icons8.com/stickers/100/logout-rounded.png"
 			alt="logout-rounded" /> Logout</a>
 		<div class="divider"></div>
 	</div>
+	
 	<!-- End of Sidebar  -->
 	<!-- Starting Content -->
 	<div class="content mt-5">
@@ -132,6 +134,8 @@ function deleteContact(cid){
 }
 //console.log(deleteContact(13))
 </script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 	<script type="text/javascript" th:src="@{/js/script.js}"></script>
 </body>

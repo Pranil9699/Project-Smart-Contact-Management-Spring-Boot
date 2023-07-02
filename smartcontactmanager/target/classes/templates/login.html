@@ -1,57 +1,72 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::Layout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::Layout(~{::section})}">
 <head>
 <meta charset="utf-8">
-<title ></title>
+<title></title>
 </head>
 <body>
 
 
-<section>
-<div id="login ">
-       
-        <div class="container">
-            <div id="login-row" class="row justify-content-center align-items-center">
-                <div id="login-column" class="col-md-6">
-                    <div id="login-box" class="col-md-12 border border-black">
-                    
-                        <form id="login-form" class="form" th:action="@{/dologin}" method="post">
-                        
-                            <h3 class="text-center text-info">Login</h3>
-                            
-                            <div th:if="${param.error}" class="alert alert-danger text-center">
-                            Invalid UserName and Password </div>
-                            
-                            <div th:if="${param.logout}" class="alert alert-success text-center">
-                            Successfully Logged out </div>
-                            
-                            <div class="form-group">
-                                <label for="username" class="text-info">UserName:</label><br>
-                                <input type="text" name="username" id="username" class="form-control">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="password" class="text-info">Password:</label><br>
-                                <input type="password" name="password" id="password" class="form-control">
-                            </div>
-                            
-                            <div class="form-group flex-box">
-                                <label for="remember-me" class="text-info"><span>Remember me</span> <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>
-                                <a th:href="@{/signup}" class="text-info">Register here</a>
-                            </div>
-                            
-                            <div id="register-link" class="text-center m-4">
-                            <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
-                                
-                            </div>
-                            
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+	<section>
+		<div id="login"
+			class="d-flex justify-content-center align-items-center">
+			<div class="container mt-5">
+				<div id="login-row" class="row">
+					<div id="login-column" class="col-md-6">
+						<div class="alert text-center" th:if="${session.message}"
+							th:classappend="${session.message.type}">
+							<p th:text="${session.message.content}"></p>
+							<th:block
+								th:text="${@sessionHelper.removeSessionAttribute('message')}"></th:block>
+						</div>
+						<div id="login-box" class="col-md-12 border border-black bg-light">
+							<form id="login-form" class="form" th:action="@{/dologin}"
+								method="post">
+								<h3 class="text-center text-info">Login</h3>
+								<div th:if="${param.error}"
+									class="alert alert-danger text-center">Invalid UserName
+									and Password</div>
+								<div th:if="${param.logout}"
+									class="alert alert-success text-center">Successfully
+									Logged out</div>
+								<div class="form-group">
+									<label for="username" class="text-info">UserName:</label> <input
+										type="text" name="username" id="username" class="form-control">
+								</div>
+								<div class="form-group">
+									<label for="password" class="text-info">Password:</label> <input
+										type="password" name="password" id="password"
+										class="form-control">
+								</div>
+								<div class="form-group flex-box">
+									<label for="remember-me" class="text-info"><span>Remember
+											me</span> <span><input id="remember-me" name="remember-me"
+											type="checkbox"></span></label>
+								</div>
+								<div class="container text-center">
+									<a th:href="@{/signup}"
+										class="text-black p-1 rounded text-decoration-none btn-outline-primary">Register
+										here</a> <a th:href="@{/forgot-password}"
+										class="text-black p-1 rounded ml-5 text-decoration-none btn-outline-primary">Forgot
+										Password</a>
+								</div>
+								<div id="register-link" class="text-center m-4">
+									<input type="submit" name="submit" class="btn btn-info btn-md"
+										value="Submit">
+								</div>
+							</form>
+						</div>
+					</div>
+					<!-- <div id="img-column" class="col-md-6 text-center">
+						<img alt="Profile Photo" class="img-fluid"
+							th:src="@{'/img/smartcontact.png'}">
+					</div> -->
+				</div>
+			</div>
+		</div>
+
+	</section>
 
 
 </body>
